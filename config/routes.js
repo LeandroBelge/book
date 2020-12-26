@@ -9,4 +9,10 @@ module.exports = app => {
 
     app.route('/book')
         .post(app.api.collection.addBookToMyCollection)
+    
+    app.route('/book/lend')
+        .put(app.api.collection.lendBook)
+    
+    app.route('/book/return')
+        .put(app.api.collection.returnBook)
 }

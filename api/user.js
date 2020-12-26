@@ -26,11 +26,30 @@ module.exports = app => {
     //GetUser
     const getUser = (req, res) => {
         app.db('user')
-            .select('user.id', 'user.name', 'user.email', 'user.created_at')
-            .join('book', 'user.id', 'book.logged_user_id')
+            .select('id', 'name', 'email')
             .where({ id: req.params.id })
             .first()
-            .then(user => res.json(user))
+            .then(user => {
+                app.db('book')
+                    .select()
+                    .where({logged_user_id: user.id})
+                    .then(books => {
+                        user.collection = books
+                        app.db('loans')
+                            .select()
+                            .where({from_user_id: user.id})
+                            .then(loans => {
+                                user.lent_books = loans
+                                app.db('loans')
+                                    .select()
+                                    .where({to_user_id: user.id})
+                                    .then(borrowed => {
+                                        user.borrowed_books = borrowed
+                                        res.json(user)
+                                    })
+                            })
+                    })
+            })
             .catch(err => res.status(500).send(err))
     }
 
