@@ -1,5 +1,7 @@
+const { json } = require("body-parser")
+
 module.exports = app => {
-    const { existsOrError, notExistsOrError} = app.api.validation
+    const { existsOrError, notExistsOrError, isEmail} = app.api.validation
 
     //CreateUser
     const createUser = async (req, res) => {
@@ -8,6 +10,7 @@ module.exports = app => {
         try {
             existsOrError(user.name, 'Nome não informado')
             existsOrError(user.email, 'E-mail não informado')
+            isEmail(user.email, 'E-mail inválido')
             const userFromDB = await app.db('user')
                 .where({ email: user.email }).first()
             if(!user.id) {
@@ -18,8 +21,16 @@ module.exports = app => {
         }
         
         app.db('user')
+            .returning(['id', 'created_at'])
             .insert(user)
-            .then(_ => res.status(204).send())
+            .then(resp => {
+                user.id = resp[0].id
+                user.created_at = resp[0].created_at
+                user.collection = []
+                user.lent_books = []
+                user.borrowed_books = []
+                res.json(user)
+            })
             .catch(err => res.status(500).send(err))
     }
     
@@ -50,7 +61,9 @@ module.exports = app => {
                             })
                     })
             })
-            .catch(err => res.status(500).send(err))
+            .catch(err => {
+                res.status(404).send("Usuário não encontrado")
+            })
     }
 
     return { createUser, getUser }

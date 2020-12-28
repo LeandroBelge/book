@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --inspect",
-    "test": "jest",
-    "watch": "jest --watch"
+    "start": "nodemon --inspect --ignore tests",
+    "test": "cross-env NODE_ENV=test jest",
+    "watch": "cross-env NODE_ENV=test jest --watch"
   },
   "keywords": [],
   "author": "",
@@ -16,11 +16,15 @@
     "consign": "0.1.6",
     "cors": "2.8.4",
     "express": "4.16.3",
+    "jest": "^26.6.3",
     "knex": "0.15.2",
     "moment": "2.22.2",
-    "pg": "7.4.3"
+    "pg": "^7.18.2",
+    "pgtools": "^0.3.0",
+    "supertest": "^6.0.1"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "1.18.4"
   }
 }

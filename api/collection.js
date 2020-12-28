@@ -18,8 +18,13 @@ module.exports = app => {
         }
         
         app.db('book')
+            .returning(['id', 'created_at'])
             .insert(book)
-            .then(_ => res.status(204).send())
+            .then(bookTemp => {
+                book.id = bookTemp[0].id
+                book.created_at = bookTemp[0].created_at
+                res.json(book)
+            })
             .catch(err => res.status(500).send(err))
 
     }
@@ -63,8 +68,13 @@ module.exports = app => {
             to_user_id: lendBook.to_user_id
         }
         app.db('loans')
+            .returning(['lent_at', 'returned_at'])
             .insert(loans)
-            .then(_ => res.status(204).send())
+            .then(loansTemp => {
+                loans.lent_at = loansTemp[0].lent_at
+                loans.returned_at = loansTemp[0].returned_at
+                res.json(loans)
+            })
             .catch(err => res.status(500).send(err))
     }
 
@@ -72,13 +82,13 @@ module.exports = app => {
         const returnBook = {...req.body}
         try {
             existsOrError(returnBook.book_id, 'Livro não informado')
-            existsOrError(returnBook.logged_user_id, 'Proprietário não informado')
+            existsOrError(returnBook.logged_user_id, 'Usuário não informado')
             
             //Validar se o livro pode ser emprestado
             const releasedBookDB = await app.db('loans')
                 .where({
                     book_id: returnBook.book_id,
-                    from_user_id: returnBook.logged_user_id
+                    to_user_id: returnBook.logged_user_id
                 })
                 .whereNotNull('lent_at')
                 .whereNull('returned_at')
@@ -91,9 +101,10 @@ module.exports = app => {
                 returned_at: app.api.common.getDateTimeNowPostgres()
             }
             app.db('loans')
+                .returning(['id','book_id', 'from_user_id', 'to_user_id', 'lent_at', 'returned_at'])
                 .update(loans)
                 .where({id: loans.id})
-                .then(_ => res.status(204).send())
+                .then(loansTemp => res.json(loansTemp[0]))
                 .catch(err => res.status(500).send(err))
         } catch(msg) {
             return res.status(400).send(msg)

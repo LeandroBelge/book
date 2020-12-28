@@ -18,5 +18,11 @@ module.exports = app => {
         if(valueA !== valueB) throw msg
     }
 
-    return { existsOrError, notExistsOrError, equalsOrError }
+    function isEmail(email, msg){
+        const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
+        if (!emailRegexp.test(email)) throw msg
+    }
+
+    return { existsOrError, notExistsOrError, equalsOrError, isEmail }
 }
