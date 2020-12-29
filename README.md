@@ -1,5 +1,11 @@
 # Book
-Api contendo serviços de empréstimos e devoluções de livros. 
+A Api book contém serviços de empréstimos e devoluções de livros. Ela deverá proporcionar:
+ - Cadastrar um usuário.
+ - Recuperar dados de um usuário.
+ - Cadastrar um livro para um usuário.
+ - Empréstimos de livros entre os usuários.
+ - Devolução dos livros emprestados.
+
 ## Requisitos
 
 - PostgreSQL
@@ -18,26 +24,21 @@ npm install
 node createDatabse
 ```
 
-3. O arquivo .env contém as configurações dos bancos de dados.
+3. O arquivo .env contém as configurações dos bancos de dados, caso seja necessário alguma modificação de porta ou outra variável de configuração.
 
-4. Quando o serviço for iniciado ele deverá rodar na porta 8080, caso a variável de ambiente PORT não seja setada.
-
-### Commandos Makefile
-
-Iniciar o serviço em modo de desenvolvimento com nodemon:
+4. Quando o serviço for iniciado ele deverá rodar na porta 8080, caso a variável de ambiente PORT não seja setada. 
 
 ```
-npm start
+npm run prod 
 ```
 
-Iniciar o serviço em modo de produção com pm2:
+5. Inciando o serviço no ambiente de desenvolvimento.
+```
+npm start 
+```
+
+6. Para efetuar os testes de integração e unitários rode o comando abaixo:
 
 ```
-npm run prod
-```
-
-Efetuar testes:
-
-```
-npm run test ou npm run watch
+npm run test
 ```
