@@ -1,21 +1,18 @@
-const { json } = require("body-parser")
-
 module.exports = app => {
-    const { existsOrError, notExistsOrError, isEmail} = app.api.validation
-
     //CreateUser
     const createUser = async (req, res) => {
         const user = { ...req.body }
-        
+        const { existsOrError, notExistsOrError, isEmail} = app.api.validation
         try {
             existsOrError(user.name, 'Nome não informado')
             existsOrError(user.email, 'E-mail não informado')
             isEmail(user.email, 'E-mail inválido')
             const userFromDB = await app.db('user')
-                .where({ email: user.email }).first()
+                .where({ email: user.email })
+                .first()
             if(!user.id) {
                 notExistsOrError(userFromDB, 'E-mail já cadastrado')
-            }
+            }            
         } catch(msg) {
             return res.status(400).send(msg)
         }

@@ -50,6 +50,26 @@ describe('PUT/book/lend', () => {
       })
     expect(res.statusCode).toEqual(400)
   })
+  it('Usuário ou receptor não cadastrados', async () => {
+    const res = await request(config)
+      .put('/book/lend')
+      .send({
+        logged_user_id: 999999999,
+      	book_id: 1,
+	      to_user_id: 99999999
+      })
+    expect(res.statusCode).toEqual(400)
+  })
+  it('Livro não cadastrado', async () => {
+    const res = await request(config)
+      .put('/book/lend')
+      .send({
+        logged_user_id: 1,
+      	book_id: 99999999999,
+	      to_user_id: 2
+      })
+    expect(res.statusCode).toEqual(400)
+  })
 })
 
 describe('Lend CRUD', () => {
