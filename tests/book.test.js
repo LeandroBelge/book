@@ -4,6 +4,9 @@ const db = config.db
 
 beforeAll(() => {
   db.migrate.latest()
+})
+
+beforeEach(() => {
   db('book').del().then()
   db('user').del().then()
 })
