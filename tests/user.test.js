@@ -5,7 +5,6 @@ const db = config.db
 beforeAll(() => {
   db.migrate.latest()
   db('user').del().then()
-  console.log('passou aqui')
 });
 
 afterAll(() => {

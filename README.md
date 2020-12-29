@@ -37,7 +37,13 @@ npm run prod
 npm start 
 ```
 
-6. Para efetuar os testes de integração e unitários rode o comando abaixo:
+6. Caso for executar os testes antes de executar a aplicação rode as migrations no banco de teste. 
+
+```
+npm run migrateTest
+```
+
+7. Para efetuar os testes de integração e unitários rode o comando abaixo:
 
 ```
 npm run test

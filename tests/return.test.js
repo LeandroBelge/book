@@ -4,7 +4,7 @@ const db = config.db
 
 beforeAll(() => {
   db.migrate.latest()
-});
+})
 
 beforeEach(() => {
   db('loans').del().then()

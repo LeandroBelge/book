@@ -7,6 +7,7 @@
     "start": "nodemon --inspect --ignore tests",
     "prod": "pm2 start index.js --name book",
     "test": "cross-env NODE_ENV=test jest --verbose --forceExit --runInBand",
+    "migrateTest": "cross-env NODE_ENV=test knex migrate:latest",
     "watch": "cross-env NODE_ENV=test jest --watch --verbose --forceExit --runInBand"
   },
   "keywords": [],

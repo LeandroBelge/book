@@ -2,6 +2,7 @@ const request = require('supertest')
 const config = require('../server')
 const db = config.db
 
+
 beforeAll(() => {
   db.migrate.latest()
 })
