@@ -5,11 +5,11 @@ const db = config.db
 beforeAll(() => {
   db.migrate.latest()
   db('book').del().then()
-});
+  db('user').del().then()
+})
 
 afterAll(() => {
   db('book').del().then()
-  //Remover o usuário cadastrado para teste de livro
   db('user').del().then()
 });
 
@@ -51,23 +51,21 @@ describe("POST/book", () => {
 
 describe('Book CRUD', () => {
   let id = 0
-  it('Criar usuário', async () => {
+  it('Adicionar um livro para um usuário', async () => {
     const res = await request(config)
       .post('/user')
       .send({
-        name: 'Fulano da Silva',
-        email: 'fulano@email.com'
+        name: 'Ciclano da Silva',
+        email: 'ciclano@email.com'
       })
     id = res.body.id  
-  })
-  it ('', async () => {      
-    const res = await request(config)
+    const resp = await request(config)
       .post('/book')
       .send({
         logged_user_id: id,
         title: 'Título informado',
         pages: '123'
       })
-    expect(res.statusCode).toEqual(200)
-  })  
+    expect(resp.statusCode).toEqual(200)  
+  })
 })

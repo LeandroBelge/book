@@ -84,7 +84,7 @@ module.exports = app => {
             existsOrError(returnBook.book_id, 'Livro não informado')
             existsOrError(returnBook.logged_user_id, 'Usuário não informado')
             
-            //Validar se o livro pode ser emprestado
+            //Validar se o livro pode ser devolvido
             const releasedBookDB = await app.db('loans')
                 .where({
                     book_id: returnBook.book_id,

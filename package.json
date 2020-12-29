@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --inspect --ignore tests",
-    "test": "cross-env NODE_ENV=test jest",
-    "watch": "cross-env NODE_ENV=test jest --watch"
+    "prod": "pm2 start index.js --name book",
+    "test": "cross-env NODE_ENV=test jest --verbose --forceExit --runInBand",
+    "watch": "cross-env NODE_ENV=test jest --watch --verbose --forceExit --runInBand"
   },
   "keywords": [],
   "author": "",

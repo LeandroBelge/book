@@ -57,7 +57,7 @@ describe("GET/user/{id}", () => {
 });
 
 describe("User CRUD", () => {
-  var id = 0
+  let id = 0
   it('Criar usuário', async () => {
     const res = await request(config)
       .post('/user')
@@ -79,7 +79,6 @@ describe("User CRUD", () => {
         name: 'Fulano da Silva',
         email: 'fulano@email.com'
       })
-    id = res.body.id  
     expect(res.statusCode).toEqual(400)
   })
 });
