@@ -18,9 +18,9 @@ npm install
 node createDatabse
 ```
 
-3. O arquivo .env contém as configurações dos bancos de dados
+3. O arquivo .env contém as configurações dos bancos de dados.
 
-4. Quando o serviço for iniciado, caso não seja informada uma porta (PORT) como variável de ambiente, o serviço será executado na porta 8080.
+4. Quando o serviço for iniciado ele deverá rodar na porta 8080, caso a variável de ambiente PORT não seja setada.
 
 ### Commandos Makefile
 
