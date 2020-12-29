@@ -4,10 +4,8 @@ const db = config.db
 
 beforeAll(() => {
   db.migrate.latest()
-});
-
-beforeEach(() => {
   db('user').del().then()
+  console.log('passou aqui')
 });
 
 afterAll(() => {
@@ -60,28 +58,30 @@ describe("GET/user/{id}", () => {
 });
 
 describe("User CRUD", () => {
-  let id = 0
   it('Criar usuário', async () => {
     const res = await request(config)
       .post('/user')
       .send({
+        id: 1,
         name: 'Fulano da Silva',
         email: 'fulano@email.com'
-      })
-    id = res.body.id  
+      }) 
+    expect(res.statusCode).toEqual(200)
+  })  
+  it('Recuperando usuário', async () => {
+    const res = await request(config).get(`/user/1`)
     expect(res.statusCode).toEqual(200)
   })
-  it('Recuperar o Usuário por id', async () => {
-    const res = await request(config).get(`/user/${id}`)
-    expect(res.statusCode).toEqual(200)
-  })
-  it('E-mail já cadastrado', async () => {
+})
+
+describe("Usuário duplicado", () => {
+  it('Email já cadastrado', async () => {
     const res = await request(config)
-      .post('/user')
-      .send({
-        name: 'Fulano da Silva',
-        email: 'fulano@email.com'
-      })
-    expect(res.statusCode).toEqual(400)
+       .post('/user')
+       .send({
+         name: 'Fulano da Silva',
+         email: 'fulano@email.com'
+       })
+     expect(res.statusCode).toEqual(400)
   })
-});
+})
