@@ -18,7 +18,7 @@ A Api book contém serviços de empréstimos e devoluções de livros. Ela dever
 npm install
 ```
 
-2. Rodar o script de criação dos bancos de produção e teste que fica na pasta raíz da aplicação.
+2. Rodar o script createDatabse.js para criação dos bancos book e book_test.
 
 ```
 node createDatabase
@@ -32,18 +32,12 @@ node createDatabase
 npm run prod 
 ```
 
-5. Inciando o serviço no ambiente de desenvolvimento.
+5. Inciando o serviço no ambiente de desenvolvimento e utilizando o banco de book_test.
 ```
 npm start 
 ```
 
-6. Antes de efetuar os testes rode as migrations no banco de test. 
-
-```
-npm run migrateTest
-```
-
-7. Efetuando os testes de integração e unitários.
+6. Efetuando os testes de integração e unitários.
 
 ```
 npm run test

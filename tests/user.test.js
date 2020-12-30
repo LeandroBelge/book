@@ -1,9 +1,9 @@
 const request = require("supertest");
 const config = require('../server')
+const faker = require('faker')
 const db = config.db
 
 beforeAll(() => {
-  db.migrate.latest()
   db('user').del().then()
 });
 
@@ -18,7 +18,7 @@ describe("POST/user", () => {
       .post('/user')
       .send({
         name: '',
-        email: 'fulano@email.com'
+        email: faker.internet.email()
       })
 
     expect(res.statusCode).toEqual(400)
@@ -27,7 +27,7 @@ describe("POST/user", () => {
     const res = await request(config)
       .post('/user')
       .send({
-        name: 'Fulano da Silva',
+        name: faker.name.findName(),
         email: ''
       })
 
@@ -37,8 +37,8 @@ describe("POST/user", () => {
     const res = await request(config)
       .post('/user')
       .send({
-        name: 'Fulano da Silva',
-        email: 'fulano.com'
+        name: faker.name.findName(),
+        email: 'email.com'
       })
 
     expect(res.statusCode).toEqual(400)
@@ -55,15 +55,15 @@ describe("GET/user/{id}", () => {
     expect(res.statusCode).toEqual(404)
   })
 });
-
+const email = faker.internet.email()
 describe("User CRUD", () => {
   it('Criar usuário', async () => {
     const res = await request(config)
       .post('/user')
       .send({
         id: 1,
-        name: 'Fulano da Silva',
-        email: 'fulano@email.com'
+        name: faker.name.findName(),
+        email: email
       }) 
     expect(res.statusCode).toEqual(200)
   })  
@@ -78,8 +78,8 @@ describe("Usuário duplicado", () => {
     const res = await request(config)
        .post('/user')
        .send({
-         name: 'Fulano da Silva',
-         email: 'fulano@email.com'
+         name: faker.name.findName(),
+         email: email
        })
      expect(res.statusCode).toEqual(400)
   })

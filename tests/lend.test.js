@@ -1,11 +1,7 @@
 const request = require('supertest')
 const config = require('../server')
+const faker = require('faker')
 const db = config.db
-
-
-beforeAll(() => {
-  db.migrate.latest()
-})
 
 beforeEach(() => {
   db('loans').del().then()
@@ -24,9 +20,9 @@ describe('PUT/book/lend', () => {
     const res = await request(config)
       .put('/book/lend')
       .send({
-        logged_user_id: 1,
+        logged_user_id: faker.random.number(10),
       	book_id: '',
-	      to_user_id: 2
+	      to_user_id: faker.random.number(10)
       })
     expect(res.statusCode).toEqual(400)
   })
@@ -35,8 +31,8 @@ describe('PUT/book/lend', () => {
       .put('/book/lend')
       .send({
         logged_user_id: '',
-      	book_id: 1,
-	      to_user_id: 2
+      	book_id: faker.random.number(10),
+	      to_user_id: faker.random.number(10)
       })
     expect(res.statusCode).toEqual(400)
   })
@@ -44,8 +40,8 @@ describe('PUT/book/lend', () => {
     const res = await request(config)
       .put('/book/lend')
       .send({
-        logged_user_id: 1,
-      	book_id: 1,
+        logged_user_id: faker.random.number(10),
+      	book_id: faker.random.number(10),
 	      to_user_id: ''
       })
     expect(res.statusCode).toEqual(400)
@@ -54,9 +50,9 @@ describe('PUT/book/lend', () => {
     const res = await request(config)
       .put('/book/lend')
       .send({
-        logged_user_id: 999999999,
-      	book_id: 1,
-	      to_user_id: 99999999
+        logged_user_id: faker.random.number(10000),
+      	book_id: faker.random.number(10),
+	      to_user_id: faker.random.number(10000)
       })
     expect(res.statusCode).toEqual(400)
   })
@@ -64,9 +60,9 @@ describe('PUT/book/lend', () => {
     const res = await request(config)
       .put('/book/lend')
       .send({
-        logged_user_id: 1,
-      	book_id: 99999999999,
-	      to_user_id: 2
+        logged_user_id: faker.random.number(10),
+      	book_id: faker.random.number(10000),
+	      to_user_id: faker.random.number(10)
       })
     expect(res.statusCode).toEqual(400)
   })
@@ -77,23 +73,23 @@ describe('Lend CRUD', () => {
     let res = await request(config)
       .post('/user')
       .send({
-        name: 'Beltrano da Silva',
-        email: 'beltrano@email.com'
+        name: faker.name.findName(),
+        email: faker.internet.email()
       })
     const idUser1 = res.body.id
     res = await request(config)
       .post('/user')
       .send({
-        name: 'Andre da Silva',
-        email: 'andre@email.com'
+        name: faker.name.findName(),
+        email: faker.internet.email()
       })
     const idUser2 = res.body.id
     res = await request(config)
       .post('/book')
       .send({
         logged_user_id: idUser1,
-        title: 'Título informado',
-        pages: '123'
+        title: faker.name.title(),
+        pages: faker.random.number(1000)
       })
     const idBook = res.body.id
     res = await request(config)
