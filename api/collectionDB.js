@@ -27,5 +27,20 @@ module.exports = app => {
         return res[0]
     }
 
-    return { saveBook, saveLendBook, saveReturnBook }
+    async function getLoansToUser(to_user_id, book_id) {
+
+        let releasedBookDB = await app.db('loans')
+                .where({
+                    book_id: book_id,
+                    to_user_id: to_user_id
+                })
+                .whereNotNull('lent_at')
+                .whereNull('returned_at')
+                .first()
+                
+        releasedBookDB.returned_at = app.api.common.getDateTimeNowPostgres()
+        return releasedBookDB
+    }
+
+    return { saveBook, saveLendBook, saveReturnBook, getLoansToUser }
 }

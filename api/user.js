@@ -1,8 +1,8 @@
 module.exports = app => {
+    const {isValid} = app.api.userValidation
     //CreateUser
     const createUser = async (req, res) => {
         let user = { ...req.body }
-        const {isValid} = app.api.userValidation
         try {
             await isValid(user)                        
         } catch(msg) {
