@@ -1,5 +1,4 @@
 module.exports = app => {
-
     app.route('/user')
         .post(app.api.user.createUser)
     app.route('/user/:id')

@@ -24,7 +24,9 @@
     "moment": "2.22.2",
     "pg": "^7.18.2",
     "pgtools": "^0.3.0",
-    "supertest": "^6.0.1"
+    "supertest": "^6.0.1",
+    "swagger-jsdoc": "^6.0.0",
+    "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
