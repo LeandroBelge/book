@@ -30,10 +30,28 @@ describe('PUT/book/return', () => {
   })
   it('Usuário logado não informado', async () => {
     const res = await request(config)
-      .put('/book/lend')
+      .put('/book/return')
       .send({
         logged_user_id: '',
       	book_id: 1,
+      })
+    expect(res.statusCode).toEqual(400)
+  })
+  it('Usuário não cadastrado', async () => {
+    const res = await request(config)
+      .put('/book/return')
+      .send({
+        logged_user_id: 999999999,
+      	book_id: 1
+      })
+    expect(res.statusCode).toEqual(400)
+  })
+  it('Livro não cadastrado', async () => {
+    const res = await request(config)
+      .put('/book/return')
+      .send({
+        logged_user_id: 1,
+      	book_id: 99999999999
       })
     expect(res.statusCode).toEqual(400)
   })

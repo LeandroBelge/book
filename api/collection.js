@@ -1,7 +1,7 @@
 module.exports = app => {
     const { existsOrError, notExistsOrError} = app.api.validation
     const addBookToMyCollection = async (req, res) => {
-        const book = { ...req.body }
+        let book = { ...req.body }
         try {
             existsOrError(book.logged_user_id, 'Proprietário não informado')
             existsOrError(book.title, 'Título não informado')
@@ -22,16 +22,13 @@ module.exports = app => {
             return res.status(400).send(msg)
         }
         
-        app.db('book')
-            .returning(['id', 'created_at'])
-            .insert(book)
-            .then(bookTemp => {
-                book.id = bookTemp[0].id
-                book.created_at = bookTemp[0].created_at
-                res.json(book)
-            })
-            .catch(err => res.status(500).send(err))
-
+        const { saveBook } = app.api.collectionDB
+        try {
+           book = await saveBook(book)
+           res.json(book)
+        } catch (error) {
+            res.status(500).send(error)
+        }
     }
 
     const lendBook = async (req, res) => {
@@ -85,22 +82,37 @@ module.exports = app => {
             from_user_id: lendBook.logged_user_id,
             to_user_id: lendBook.to_user_id
         }
-        app.db('loans')
-            .returning(['lent_at', 'returned_at'])
-            .insert(loans)
-            .then(loansTemp => {
-                loans.lent_at = loansTemp[0].lent_at
-                loans.returned_at = loansTemp[0].returned_at
-                res.json(loans)
-            })
-            .catch(err => res.status(500).send(err))
+        const { saveLendBook } = app.api.collectionDB
+        try {
+            loans = await saveLendBook(loans)
+            res.json(loans)
+        } catch (error) {
+            res.status(500).send(error)
+        }
     }
 
     const returnBook = async(req, res) => {
         const returnBook = {...req.body}
+        let loans = {}
         try {
             existsOrError(returnBook.book_id, 'Livro não informado')
             existsOrError(returnBook.logged_user_id, 'Usuário não informado')
+            
+            const userFromDB = await app.db('user')
+                .where({id: returnBook.logged_user_id})
+                .first()
+            if(!userFromDB) {
+                throw 'Usuário inexistente'
+            }
+            
+            const bookNotFound = await app.db('book')
+                .where({
+                    id: returnBook.book_id
+                }).first()
+            
+            if(!bookNotFound) {
+                throw 'O Livro informado não está cadastrado'
+            }
             
             //Validar se o livro pode ser devolvido
             const releasedBookDB = await app.db('loans')
@@ -112,21 +124,23 @@ module.exports = app => {
                 .whereNull('returned_at')
                 .first()
             if(!releasedBookDB) {
-                throw 'O Livro não pode ser devolvido pois não foi emprestado'
+                throw 'O Livro não pode ser devolvido pois não foi emprestado para o usuário'
             }
-            let loans = {
+            loans = {
                 id: releasedBookDB.id,
                 returned_at: app.api.common.getDateTimeNowPostgres()
             }
-            app.db('loans')
-                .returning(['id','book_id', 'from_user_id', 'to_user_id', 'lent_at', 'returned_at'])
-                .update(loans)
-                .where({id: loans.id})
-                .then(loansTemp => res.json(loansTemp[0]))
-                .catch(err => res.status(500).send(err))
         } catch(msg) {
             return res.status(400).send(msg)
-        }              
+        }             
+        
+        const { saveReturnBook } = app.api.collectionDB
+        try {
+            loans = await saveReturnBook(loans)
+            res.json(loans)
+        } catch (error) {
+            res.status(500).send(error)
+        }
     }
 
     return { addBookToMyCollection, lendBook, returnBook }

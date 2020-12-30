@@ -21,7 +21,7 @@ npm install
 2. Rodar o script de criação dos bancos de produção e teste que fica na pasta raíz da aplicação.
 
 ```
-node createDatabse
+node createDatabase
 ```
 
 3. O arquivo .env contém as configurações dos bancos de dados, caso seja necessário alguma modificação de porta ou outra variável de configuração.
